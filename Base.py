@@ -4,6 +4,7 @@ pygame.init()
 
 #Variables
 listeProjectiles = []
+listeEnnemis = []
 
 #Fenetre
 largeur = 640
@@ -11,13 +12,28 @@ hauteur = 480
 fenetre = pygame.display.set_mode((largeur, hauteur))
 pygame.mouse.set_visible(False)
 
+#Chargement des images
+imagesProjectiles = [pygame.image.load("Ressources/Sprites/Projectiles/Boule de feu 1.png").convert_alpha(),
+                      pygame.image.load("Ressources/Sprites/Projectiles/Boule de feu 2.png").convert_alpha(),
+                      pygame.image.load("Ressources/Sprites/Projectiles/Boule de feu 3.png").convert_alpha(),
+                      pygame.image.load("Ressources/Sprites/Projectiles/Boule de feu 4.png").convert_alpha()]
+
+imagesJoueur = [pygame.image.load("Ressources/Sprites/Vaisseaux/Joueur neutre.png").convert_alpha(),
+                 pygame.image.load("Ressources/Sprites/Vaisseaux/Joueur droite.png").convert_alpha(),
+                 pygame.image.load("Ressources/Sprites/Vaisseaux/Joueur gauche.png").convert_alpha()]
+
+imageEnnemi = [pygame.image.load("Ressources/Sprites/Vaisseaux/Ennemi neutre.png").convert_alpha(),
+               pygame.image.load("Ressources/Sprites/Vaisseaux/Ennemi droite.png").convert_alpha(),
+               pygame.image.load("Ressources/Sprites/Vaisseaux/Ennemi gauche.png").convert_alpha()]
+
+imageFond = pygame.image.load("Ressources/Sprites/Utiles/Fond.png").convert_alpha()
+
 
 #Creation objets
-fond = ElementGraphique(pygame.image.load("Fond.png").convert_alpha(), fenetre)
-joueur = Vaisseau(pygame.image.load("Vaisseau.png").convert_alpha(), fenetre, 100, 100)
-
-imagesProjectiles = [pygame.image.load("Boule de feu 1.png").convert_alpha(), pygame.image.load("Boule de feu 2.png").convert_alpha(),
-                     pygame.image.load("Boule de feu 3.png").convert_alpha(), pygame.image.load("Boule de feu 4.png").convert_alpha()]
+fond = ElementGraphique(imageFond, fenetre)
+joueur = Joueur(imagesJoueur, fenetre, 100, 100)
+ennemi = Vaisseau(imageEnnemi, fenetre, 100, 100)
+listeEnnemis.append(ennemi)
 projectile = Projectile(imagesProjectiles, fenetre)
 
 #Timer
@@ -28,13 +44,17 @@ continuer = True
 while continuer:
     horloge.tick(60)
 
-    #Script
+    #Evenement
+    touche = pygame.key.get_pressed()
+
+    #Deplacement des projectiles
     for projectile in listeProjectiles:
         projectile.deplacer()
 
+    #Deplacement des ennemis
+    ennemi.deplacer("droite", largeur, hauteur)
 
-    #Evenement
-    touche = pygame.key.get_pressed()
+
 
     #Deplacement du joueur
     if 0 in touche:
@@ -53,25 +73,21 @@ while continuer:
         if event.type == MOUSEBUTTONDOWN and event.button == 1:
             projectile = Projectile(imagesProjectiles, fenetre, joueur.rect.x + joueur.dimension_x/2.5, joueur.rect.y)
             listeProjectiles.append(projectile)
-
-
-    #Quitter le jeu
-    if touche[pygame.K_ESCAPE]:
-        pygame.quit()
+        if event.type == pygame.QUIT:
+            continuer = False
+        if event.type == KEYDOWN and event.key == K_ESCAPE:
+            continuer = False
 
 
     #Affichage
     fond.afficher()
-    joueur.afficher()
 
     for projectile in listeProjectiles:
         projectile.afficher()
 
-    #Quitter le jeu
+    joueur.afficher()
+    ennemi.afficher()
     pygame.display.flip()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            continuer = False
 
 pygame.quit()

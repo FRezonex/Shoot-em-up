@@ -35,9 +35,10 @@ class Objet(ElementGraphique):
 
 
 class Vaisseau(Objet):
-    def __init__(self, image, fenetre, x=0, y=0):
-        super().__init__(image, fenetre, x, y)
+    def __init__(self, images, fenetre, x=0, y=0):
+        super().__init__(images[0], fenetre, x, y)
 
+        self.images = images
         self.vitesse = 6
         self.dimension_x = 48
         self.dimension_y = 54
@@ -45,22 +46,25 @@ class Vaisseau(Objet):
     def deplacer(self, direction, largeur, hauteur):
         if direction == "droite" and self.rect.x <= largeur - self.dimension_x:
             self.rect.x += self.vitesse
-            self.image = pygame.image.load("Vaisseau doite.png").convert_alpha()
-            self.afficher()
+            self.image = self.images[1]
+
         if direction == "gauche" and self.rect.x >= 0:
             self.rect.x -= self.vitesse
-            self.image = pygame.image.load("Vaisseau gauche.png").convert_alpha()
-            self.afficher()
+            self.image = self.images[2]
+
         if direction == "haut" and self.rect.y >= 0:
             self.rect.y -= self.vitesse
+
         if direction == "bas" and self.rect.y <= hauteur - self.dimension_y:
             self.rect.y += self.vitesse
+
         if direction == "neutre":
-            self.image = pygame.image.load("Vaisseau.png").convert_alpha()
+            self.image = self.images[0]
 
 
-class Ennemi(Objet):
-    pass
+class Joueur(Vaisseau):
+    def __init__(self, images, fenetre, x=0, y=0):
+        super().__init__(images, fenetre, x, y)
 
 
 class Projectile(Objet):
