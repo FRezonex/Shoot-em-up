@@ -35,36 +35,40 @@ class Objet(ElementGraphique):
 
 
 class Vaisseau(Objet):
-    def __init__(self, images, fenetre, x=0, y=0):
+    def __init__(self, images, fenetre, vitesse, x=0, y=0):
         super().__init__(images[0], fenetre, x, y)
 
         self.images = images
-        self.vitesse = 6
+        self.vitesse = vitesse
         self.dimension_x = 48
         self.dimension_y = 54
 
-    def deplacer(self, direction, largeur, hauteur):
+    def deplacer(self, direction, largeur, hauteur, nbFois=1):
         if direction == "droite" and self.rect.x <= largeur - self.dimension_x:
-            self.rect.x += self.vitesse
-            self.image = self.images[1]
+            for i in range(nbFois):
+                self.rect.x += self.vitesse
+                self.image = self.images[1]
 
         if direction == "gauche" and self.rect.x >= 0:
-            self.rect.x -= self.vitesse
-            self.image = self.images[2]
+            for i in range(nbFois):
+                self.rect.x -= self.vitesse
+                self.image = self.images[2]
 
         if direction == "haut" and self.rect.y >= 0:
-            self.rect.y -= self.vitesse
+            for i in range(nbFois):
+                self.rect.y -= self.vitesse
 
         if direction == "bas" and self.rect.y <= hauteur - self.dimension_y:
-            self.rect.y += self.vitesse
+            for i in range(nbFois):
+                self.rect.y += self.vitesse
 
         if direction == "neutre":
             self.image = self.images[0]
 
 
 class Joueur(Vaisseau):
-    def __init__(self, images, fenetre, x=0, y=0):
-        super().__init__(images, fenetre, x, y)
+    def __init__(self, images, fenetre, vitesse, x=0, y=0):
+        super().__init__(images, fenetre, vitesse, x, y)
 
 
 class Projectile(Objet):

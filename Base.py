@@ -29,10 +29,10 @@ imageEnnemi = [pygame.image.load("Ressources/Sprites/Vaisseaux/Ennemi neutre.png
 imageFond = pygame.image.load("Ressources/Sprites/Utiles/Fond.png").convert_alpha()
 
 
-#Creation objets
+#Creation des objets
 fond = ElementGraphique(imageFond, fenetre)
-joueur = Joueur(imagesJoueur, fenetre, 100, 100)
-ennemi = Vaisseau(imageEnnemi, fenetre, 100, 100)
+joueur = Joueur(imagesJoueur, fenetre, 6, 100, 100)
+ennemi = Vaisseau(imageEnnemi, fenetre, 2, 100, 100)
 listeEnnemis.append(ennemi)
 projectile = Projectile(imagesProjectiles, fenetre)
 
@@ -43,8 +43,6 @@ continuer = True
 #Boucle du jeu
 while continuer:
     horloge.tick(60)
-
-    #Evenement
     touche = pygame.key.get_pressed()
 
     #Deplacement des projectiles
@@ -52,6 +50,7 @@ while continuer:
         projectile.deplacer()
 
     #Deplacement des ennemis
+
     ennemi.deplacer("droite", largeur, hauteur)
 
 
