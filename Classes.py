@@ -43,27 +43,24 @@ class Vaisseau(Objet):
         self.dimension_x = 48
         self.dimension_y = 54
 
-    def deplacer(self, direction, largeur, hauteur, nbFois=1):
+    def deplacer(self, direction, largeur, hauteur):
         if direction == "droite" and self.rect.x <= largeur - self.dimension_x:
-            for i in range(nbFois):
-                self.rect.x += self.vitesse
-                self.image = self.images[1]
-
-        if direction == "gauche" and self.rect.x >= 0:
-            for i in range(nbFois):
-                self.rect.x -= self.vitesse
-                self.image = self.images[2]
-
-        if direction == "haut" and self.rect.y >= 0:
-            for i in range(nbFois):
-                self.rect.y -= self.vitesse
-
-        if direction == "bas" and self.rect.y <= hauteur - self.dimension_y:
-            for i in range(nbFois):
-                self.rect.y += self.vitesse
-
-        if direction == "neutre":
+            self.rect.x += self.vitesse
+            self.image = self.images[1]
+        elif direction == "gauche" and self.rect.x >= 0:
+            self.rect.x -= self.vitesse
+            self.image = self.images[2]
+        elif direction == "haut" and self.rect.y >= 0:
+            self.rect.y -= self.vitesse
+        elif direction == "bas" and self.rect.y <= hauteur - self.dimension_y:
+            self.rect.y += self.vitesse
+        elif direction == "neutre":
             self.image = self.images[0]
+
+    def tirer(self, imagesProjectiles, listeProjectiles, fenetre):
+        projectile = Projectile(imagesProjectiles, fenetre, self.rect.x + self.dimension_x/2.5, self.rect.y)
+        listeProjectiles.append(projectile)
+        print("Feu !")
 
 
 class Joueur(Vaisseau):
@@ -97,6 +94,14 @@ class Projectile(Objet):
         if self.rect.y == 0:
             self.mort = True
 
+
+#Fonctions
+def creerEnnemis(nombreColonne, nombreLigne, vitesse, positionFin, images, fenetre, listeEnnemis):
+    for i in range(nombreLigne):
+        y = i*60
+        for i in range(nombreColonne):
+            ennemi = Vaisseau(images, fenetre, vitesse, positionFin-i*50, y)
+            listeEnnemis.append(ennemi)
 
 
 

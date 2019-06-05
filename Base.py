@@ -1,10 +1,12 @@
 from Classes import *
+from random import randrange
 
 pygame.init()
 
 #Variables
 listeProjectiles = []
 listeEnnemis = []
+compteurEnnemis = 0
 
 #Fenetre
 largeur = 640
@@ -32,8 +34,7 @@ imageFond = pygame.image.load("Ressources/Sprites/Utiles/Fond.png").convert_alph
 #Creation des objets
 fond = ElementGraphique(imageFond, fenetre)
 joueur = Joueur(imagesJoueur, fenetre, 6, 100, 100)
-ennemi = Vaisseau(imageEnnemi, fenetre, 2, 100, 100)
-listeEnnemis.append(ennemi)
+creerEnnemis(7, 3, 6, 300, imageEnnemi, fenetre, listeEnnemis)
 projectile = Projectile(imagesProjectiles, fenetre)
 
 #Timer
@@ -50,8 +51,18 @@ while continuer:
         projectile.deplacer()
 
     #Deplacement des ennemis
+    compteurEnnemis += 1
 
-    ennemi.deplacer("droite", largeur, hauteur)
+    for ennemi in listeEnnemis:
+        if compteurEnnemis > 0 and compteurEnnemis < 50:
+            ennemi.deplacer("droite", largeur, hauteur)
+        if compteurEnnemis > 50 and compteurEnnemis < 100:
+            ennemi.deplacer("gauche", largeur, hauteur)
+        if compteurEnnemis > 100:
+            listeEnnemis[randrange(listeEnnemis.__len__())].tirer(imagesProjectiles, listeProjectiles, fenetre)
+            compteurEnnemis = 0
+
+
 
 
 
@@ -84,8 +95,10 @@ while continuer:
     for projectile in listeProjectiles:
         projectile.afficher()
 
+    for ennemi in listeEnnemis:
+        ennemi.afficher()
+
     joueur.afficher()
-    ennemi.afficher()
     pygame.display.flip()
 
 
